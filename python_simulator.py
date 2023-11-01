@@ -239,58 +239,95 @@ def for_a51ethNFT_token_staked():
 # 4. Combine function  
 def combine_rewards_distribution():
     days_in_which_reward_will_be_distributed = int(input("\nEnter the number of days in which total rewards (both A51 and ETH) will be distributed: "))
+    
     total_ETH_reward_to_be_distributed = float(input("\nEnter the total ETH rewards to be distributed: ")) 
+    
     # Calculate the ETH reward rate
     eth_reward_rate = calculate_reward_rate(total_ETH_reward_to_be_distributed, days_in_which_reward_will_be_distributed)
     # Print the result
     print("\nETH Token Reward Rate:", eth_reward_rate)
     total_A51_reward_to_be_distributed = float(input("\nEnter the total A51 rewards to be distributed: "))
+
     # Calculate the A51 reward rate
     a51_reward_rate = calculate_reward_rate(total_A51_reward_to_be_distributed, days_in_which_reward_will_be_distributed)
     # Print the result
     print("\nA51 Token Reward Rate:", a51_reward_rate)
+    
     number_of_users = int(input("\nEnter the number of users: "))
     
-    number_of_days_user_staked = []  # Initialize a list to store staked days for each user
+    # Initialize lists to store user data
+    user_staking_choices = []
+    user_days_staked = []
+    user_nft_dollar_amounts = []
+    user_a51_dollar_amounts = []
 
     for i in range(number_of_users):
+        # Choose "O" for original NFT and "W" for whitelisted NFT
         while True:
-            try:
-                days_staked = int(input(f"Enter the number of days staked for User {i + 1}: "))
-                break
-            except ValueError:
-                print("Invalid input. Please enter a valid integer.")
-        number_of_days_user_staked.append(days_staked)
-
-    # Initialize lists to store staking choices for each user
-    staking_choices = []
-
-    # Ask each user if they want to stake A51/ETH NFT or other whitelisted NFT
-    for i in range(number_of_users):
-        while True:
-            choice = input(f"User {i + 1}, do you want to stake A51/ETH NFT (press A) or other whitelisted NFT ( press N)? ").strip().upper()
-            if choice in ('A', 'N'):
-                staking_choices.append(choice)
+            choice = input(f"User {i + 1}, choose 'O' for original NFT or 'W' for whitelisted NFT: ").strip().upper()
+            if choice in ('O', 'W'):
+                user_staking_choices.append(choice)
                 break
             else:
-                print("Invalid choice. Please enter 'A' for A51/ETH NFT or 'N' for other whitelisted NFT.")
+                print("Invalid choice. Please enter 'O' for original NFT or 'W' for whitelisted NFT.")
+        
+        # Initialize variables to collect NFT and A51 dollar amounts
+        nft_dollar_amount = 0.0
+        a51_dollar_amount = 0.0
 
-    # Print the staking choices for each user
-    for i in range(number_of_users):
-        print(f"User {i + 1} chose to stake: {staking_choices[i]}")
+        # If the user chose "O" for original NFT, collect additional information
+        if user_staking_choices[i] == 'O':
+            days_staked = int(input(f"Enter the number of days for the token to be staked, for User {i + 1}: "))
+            user_days_staked.append(days_staked)
+            
+            nft_dollar_amount = float(input(f"Enter the NFT dollar amount to be staked for User {i + 1}: "))
+            user_nft_dollar_amounts.append(nft_dollar_amount)
 
-    # You can now continue with the rewards distribution logic based on the staking choices.
-    # This is where you would calculate rewards for each staking choice.
-    # Add your reward calculation logic here.
+        # If the user chose "W" for whitelisted NFT, collect additional information
+        elif user_staking_choices[i] == 'W':
+            days_staked = int(input(f"Enter the number of days for the token to be staked, for User {i + 1}: "))
+            user_days_staked.append(days_staked)
+            
+            nft_dollar_amount = float(input(f"Enter the NFT dollar amount to be staked for User {i + 1}: "))
+            a51_dollar_amount = float(input(f"Enter the A51 dollar amount to be staked for User {i + 1}: "))
+            
+        # Append the collected NFT and A51 dollar amounts    
+        user_nft_dollar_amounts.append(nft_dollar_amount)
+        user_a51_dollar_amounts.append(a51_dollar_amount)
 
-# Call the function to start the process
-combine_rewards_distribution()
+    # Calculate sum of NFT and A51 dollar amounts
+    total_nft_dollar_amounts = sum(user_nft_dollar_amounts)
+    total_a51_dollar_amounts = sum(user_a51_dollar_amounts)
+    
+    # Calculate weightage for each user
+    weightage_nft = [amount / total_nft_dollar_amounts for amount in user_nft_dollar_amounts]
+    weightage_a51 = [amount / total_a51_dollar_amounts for amount in user_a51_dollar_amounts]
+    
+    # Print the collected NFT dollar amounts and A51 dollar amounts
+    print("\nUser NFT Dollar Amounts:")
+    for i, amount in enumerate(user_nft_dollar_amounts):
+        print(f"User {i + 1}:", amount)
+
+    print("\nUser A51 Dollar Amounts:")
+    for i, amount in enumerate(user_a51_dollar_amounts):
+        print(f"User {i + 1}:", amount)
+
+    # Print the calculated weightage for each user
+    print("\nWeightage for NFT:")
+    for i, w in enumerate(weightage_nft):
+        print(f"User {i + 1}:", w)
+
+    print("\nWeightage for A51:")
+    for i, w in enumerate(weightage_a51):
+        print(f"User {i + 1}:", w)    
 
 
 
 
 
 
+
+'''
 print("\n**************************************************************************************************************************************")
 
 print("\n1. Final Rewards for users who staked A51 tokens and received ETH as rewards")
@@ -327,3 +364,7 @@ for i, reward in enumerate(final_ETH_rewards):
     print(f"User {i + 1} Final ETH Reward:", reward)
 
 print("\n**************************************************************************************************************************************")
+'''
+# Call the function to start the process
+print("\n4. Users can either stake A51/ETH pair NFT or any other whitelisted NFT. ")
+combine_rewards_distribution()
