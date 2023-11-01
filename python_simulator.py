@@ -194,7 +194,7 @@ def for_a51ethNFT_token_staked():
     # Print the result
     print("\nA51 Token Reward Rate:", a51_reward_rate)
 
-#TOKEN B (staked NFT and will recieve A51 as rewards)
+#TOKEN B (staked A5I/ETH NFT and will recieve both A51 and ETH as rewards)
     print("\nFor ETH: ")
     random_amounts_B, weightage_values_B = calculate_weightage(number_of_users)
 
@@ -236,10 +236,61 @@ def for_a51ethNFT_token_staked():
 
     return final_A51_rewards, final_ETH_rewards
 
+# 4. Combine function  
+def combine_rewards_distribution():
+    days_in_which_reward_will_be_distributed = int(input("\nEnter the number of days in which total rewards (both A51 and ETH) will be distributed: "))
+    total_ETH_reward_to_be_distributed = float(input("\nEnter the total ETH rewards to be distributed: ")) 
+    # Calculate the ETH reward rate
+    eth_reward_rate = calculate_reward_rate(total_ETH_reward_to_be_distributed, days_in_which_reward_will_be_distributed)
+    # Print the result
+    print("\nETH Token Reward Rate:", eth_reward_rate)
+    total_A51_reward_to_be_distributed = float(input("\nEnter the total A51 rewards to be distributed: "))
+    # Calculate the A51 reward rate
+    a51_reward_rate = calculate_reward_rate(total_A51_reward_to_be_distributed, days_in_which_reward_will_be_distributed)
+    # Print the result
+    print("\nA51 Token Reward Rate:", a51_reward_rate)
+    number_of_users = int(input("\nEnter the number of users: "))
+    
+    number_of_days_user_staked = []  # Initialize a list to store staked days for each user
+
+    for i in range(number_of_users):
+        while True:
+            try:
+                days_staked = int(input(f"Enter the number of days staked for User {i + 1}: "))
+                break
+            except ValueError:
+                print("Invalid input. Please enter a valid integer.")
+        number_of_days_user_staked.append(days_staked)
+
+    # Initialize lists to store staking choices for each user
+    staking_choices = []
+
+    # Ask each user if they want to stake A51/ETH NFT or other whitelisted NFT
+    for i in range(number_of_users):
+        while True:
+            choice = input(f"User {i + 1}, do you want to stake A51/ETH NFT (press A) or other whitelisted NFT ( press N)? ").strip().upper()
+            if choice in ('A', 'N'):
+                staking_choices.append(choice)
+                break
+            else:
+                print("Invalid choice. Please enter 'A' for A51/ETH NFT or 'N' for other whitelisted NFT.")
+
+    # Print the staking choices for each user
+    for i in range(number_of_users):
+        print(f"User {i + 1} chose to stake: {staking_choices[i]}")
+
+    # You can now continue with the rewards distribution logic based on the staking choices.
+    # This is where you would calculate rewards for each staking choice.
+    # Add your reward calculation logic here.
+
+# Call the function to start the process
+combine_rewards_distribution()
 
 
 
-''' 
+
+
+
 print("\n**************************************************************************************************************************************")
 
 print("\n1. Final Rewards for users who staked A51 tokens and received ETH as rewards")
@@ -261,7 +312,7 @@ for i, reward in enumerate(final_A51_rewards):
 print("\n")
 for i, reward in enumerate(final_ETH_rewards):
     print(f"User {i + 1} Final ETH Reward:", reward)
-'''
+
 print("\n**************************************************************************************************************************************")
 
 print("\n2. Final Rewards for users who staked A51/ETH pair NFT, and received veA51 token ID, ETH rewards (token A), A51 rewards (token B)")
@@ -274,3 +325,5 @@ for i, reward in enumerate(final_A51_rewards):
 print("\n")
 for i, reward in enumerate(final_ETH_rewards):
     print(f"User {i + 1} Final ETH Reward:", reward)
+
+print("\n**************************************************************************************************************************************")
