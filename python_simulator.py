@@ -281,6 +281,8 @@ def combine_rewards_distribution():
             user_days_staked.append(days_staked)
             
             nft_dollar_amount = float(input(f"Enter the NFT dollar amount to be staked for User {i + 1}: "))
+
+            # Append the collected NFT dollar amounts 
             user_nft_dollar_amounts.append(nft_dollar_amount)
 
         # If the user chose "W" for whitelisted NFT, collect additional information
@@ -291,9 +293,9 @@ def combine_rewards_distribution():
             nft_dollar_amount = float(input(f"Enter the NFT dollar amount to be staked for User {i + 1}: "))
             a51_dollar_amount = float(input(f"Enter the A51 dollar amount to be staked for User {i + 1}: "))
             
-        # Append the collected NFT and A51 dollar amounts    
-        user_nft_dollar_amounts.append(nft_dollar_amount)
-        user_a51_dollar_amounts.append(a51_dollar_amount)
+            # Append the collected NFT and A51 dollar amounts    
+            user_nft_dollar_amounts.append(nft_dollar_amount)
+            user_a51_dollar_amounts.append(a51_dollar_amount)
 
     # Calculate sum of NFT and A51 dollar amounts
     total_nft_dollar_amounts = sum(user_nft_dollar_amounts)
@@ -302,30 +304,46 @@ def combine_rewards_distribution():
     # Calculate weightage for each user
     weightage_nft = [amount / total_nft_dollar_amounts for amount in user_nft_dollar_amounts]
     weightage_a51 = [amount / total_a51_dollar_amounts for amount in user_a51_dollar_amounts]
-    
-    # Print the collected NFT dollar amounts and A51 dollar amounts
-    print("\nUser NFT Dollar Amounts:")
+
+    # Initialize lists to store user rewards
+    user_final_a51_rewards = []
+    user_final_eth_rewards = []
+
+    # Calculate rewards for each user based on staking choice
+    for i in range(number_of_users):
+        if user_staking_choices[i] == 'O':
+            final_a51_rewards = (weightage_nft[i] * 0.3) * eth_reward_rate * user_days_staked[i] * 7144
+            final_eth_rewards = (weightage_nft[i] * 0.7) * a51_reward_rate * user_days_staked[i] * 7144
+        elif user_staking_choices[i] == 'W':
+            final_a51_rewards = (weightage_a51[i]) * eth_reward_rate * user_days_staked[i] * 7144
+            weightageA = weightage_a51[i] * 0.6
+            weightageB = weightage_nft[i] * 0.4
+            final_eth_rewards = (weightageA + weightageB) * a51_reward_rate * user_days_staked[i] * 7144
+
+        user_final_a51_rewards.append(final_a51_rewards)
+        user_final_eth_rewards.append(final_eth_rewards)
+
+    return user_final_a51_rewards, user_final_eth_rewards
+'''
+    # Print the collected NFT dollar amounts and A51 dollar amounts 
+    print("\nUser NFT Dollar Amounts:") 
     for i, amount in enumerate(user_nft_dollar_amounts):
-        print(f"User {i + 1}:", amount)
+        print(f"User {i + 1} NFT staked:", amount)
 
     print("\nUser A51 Dollar Amounts:")
     for i, amount in enumerate(user_a51_dollar_amounts):
-        print(f"User {i + 1}:", amount)
+        print(f"User {i + 1} A51 staked:", amount)
 
     # Print the calculated weightage for each user
     print("\nWeightage for NFT:")
     for i, w in enumerate(weightage_nft):
-        print(f"User {i + 1}:", w)
+        print(f"User {i + 1} weightage:", w)
 
     print("\nWeightage for A51:")
     for i, w in enumerate(weightage_a51):
-        print(f"User {i + 1}:", w)    
-
-
-
-
-
-
+        print(f"User {i + 1} weightage:", w)
+'''
+            
 
 '''
 print("\n**************************************************************************************************************************************")
@@ -367,4 +385,13 @@ print("\n***********************************************************************
 '''
 # Call the function to start the process
 print("\n4. Users can either stake A51/ETH pair NFT or any other whitelisted NFT. ")
-combine_rewards_distribution()
+user_final_a51_rewards, user_final_eth_rewards = combine_rewards_distribution()
+
+# Print the calculated rewards for each user
+print("\nUser Final A51 Rewards:")
+for i, reward in enumerate(user_final_a51_rewards):
+    print(f"User {i + 1} final A51 claimable rewards:", reward)
+
+print("\nUser Final ETH Rewards:")
+for i, reward in enumerate(user_final_eth_rewards):
+    print(f"User {i + 1} final ETH claimable rewards:", reward)
