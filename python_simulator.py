@@ -312,19 +312,18 @@ def combine_rewards_distribution():
     # Calculate rewards for each user based on staking choice
     for i in range(number_of_users):
         if user_staking_choices[i] == 'O':
-            final_a51_rewards = (weightage_nft[i] * 0.3) * eth_reward_rate * user_days_staked[i] * 7144
-            final_eth_rewards = (weightage_nft[i] * 0.7) * a51_reward_rate * user_days_staked[i] * 7144
+            final_a51_rewards = (weightage_nft[i] * 0.7) * eth_reward_rate * user_days_staked[i] * 7144
+            final_eth_rewards = (weightage_nft[i] * 0.3) * a51_reward_rate * user_days_staked[i] * 7144
         elif user_staking_choices[i] == 'W':
-            final_a51_rewards = (weightage_a51[i]) * eth_reward_rate * user_days_staked[i] * 7144
             weightageA = weightage_a51[i] * 0.6
             weightageB = weightage_nft[i] * 0.4
-            final_eth_rewards = (weightageA + weightageB) * a51_reward_rate * user_days_staked[i] * 7144
+            final_a51_rewards = (weightageA + weightageB) * a51_reward_rate * user_days_staked[i] * 7144
+            final_eth_rewards = (weightage_a51[i]) * eth_reward_rate * user_days_staked[i] * 7144
 
         user_final_a51_rewards.append(final_a51_rewards)
         user_final_eth_rewards.append(final_eth_rewards)
-
-    return user_final_a51_rewards, user_final_eth_rewards
-'''
+    
+    '''
     # Print the collected NFT dollar amounts and A51 dollar amounts 
     print("\nUser NFT Dollar Amounts:") 
     for i, amount in enumerate(user_nft_dollar_amounts):
@@ -342,7 +341,10 @@ def combine_rewards_distribution():
     print("\nWeightage for A51:")
     for i, w in enumerate(weightage_a51):
         print(f"User {i + 1} weightage:", w)
-'''
+    '''
+
+    return user_final_a51_rewards, user_final_eth_rewards
+
             
 
 '''
